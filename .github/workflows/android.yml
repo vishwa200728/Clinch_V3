@@ -5,26 +5,37 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout Repository
+        uses: actions/checkout@v4
 
-      - name: Unzip Source
-        run: unzip clinch.zip # <-- CHANGE THIS to your actual zip filename!
+      - name: Extract Source Code
+        run: unzip clinch.zip
+
+      - name: Move files to Root
+        # This moves files out of the unzipped folder so the builder can see them
+        run: |
+          if [ -d "clinch" ]; then
+            mv clinch/* .
+          fi
 
       - name: set up JDK 17
         uses: actions/setup-java@v4
         with:
           java-version: '17'
           distribution: 'temurin'
-          cache: gradle
 
-      - name: Install dependencies
+      - name: Install Node Dependencies
         run: npm install
 
-      - name: Build with Gradle
+      - name: Make Gradle Executable
+        run: chmod +x gradlew
+        continue-on-error: true
+
+      - name: Build APK
         run: ./gradlew assembleRelease
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: app-release
-          path: app/build/outputs/apk/release/*.apk
+          name: clinch-apk
+          path: "**/*.apk"
