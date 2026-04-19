@@ -8,7 +8,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Unzip Source
-        run: unzip YOUR_ZIP_NAME.zip # <-- CHANGE THIS to your actual zip filename!
+        run: unzip clinch.zip # <-- CHANGE THIS to your actual zip filename!
 
       - name: set up JDK 17
         uses: actions/setup-java@v4
